@@ -1,14 +1,12 @@
 .DS_Store
 .env
 .env.testing
-codeception.yml
 composer.lock
 log
 log.txt
 phpstan.neon
 tests/_output
 tests/_wordpress
-tests/Support/_generated
-tests/Support/Data/convertkit-export.json
+tests/_support/_generated
 vendor
 *.zip

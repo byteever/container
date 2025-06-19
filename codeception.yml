@@ -1,0 +1,27 @@
+namespace: Tests
+support_namespace: _support
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+    strict_xml: false
+suites:
+    functional:
+        actor: FunctionalTester
+        path: functional
+        modules:
+            enabled:
+                - Asserts
+                - Tests\_support\Helper\Functional
+        step_decorators: ~
