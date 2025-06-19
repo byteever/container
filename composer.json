@@ -1,0 +1,62 @@
+{
+  "name": "byteever/container",
+  "description": "A powerful dependency injection container specifically designed for WordPress plugin development with advanced features like auto-wiring, service binding, and configuration management.",
+  "type": "library",
+  "keywords": [
+    "dependency-injection",
+    "container",
+    "ioc",
+    "service-container",
+    "dependency-container",
+    "autowiring",
+    "php"
+  ],
+  "homepage": "https://github.com/byteever/container",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ByteEver",
+      "email": "info@byteever.com",
+      "homepage": "https://byteever.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/byteever/container/issues",
+    "source": "https://github.com/byteever/container"
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "codeception/codeception": "^5.0",
+    "lucatume/wp-browser": "^4.0",
+    "phpstan/phpstan": "^1.0",
+    "byteever/byteever-sniffs": "^1.1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "ByteEver\\Container\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "classmap-authoritative": true
+  },
+  "scripts": {
+    "test": "codecept run functional",
+    "test-init": "codecept init wpbrowser",
+    "test-all": "codecept run",
+    "codecept-build": "codecept build",
+    "phpstan": "phpstan analyse src --level=8",
+    "phpcs": "phpcs src --standard=ByteEver-Default",
+    "phpcbf": "phpcbf src --standard=ByteEver-Default"
+  }
+}
