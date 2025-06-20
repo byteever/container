@@ -13,7 +13,7 @@ use ArrayAccess;
  * on null values, preventing fatal errors and allowing safe method chaining.
  *
  * @since   1.0.0
- * @version 0.0.1
+ * @version 0.0.2
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  * @package ByteEver/Container
  * @license MIT
@@ -63,7 +63,7 @@ class NullProxy implements ArrayAccess {
 	 * @return void
 	 */
 	public function __set( string $property, mixed $value ): void {
-		// Do nothing - silently ignore property setting
+		// Do nothing - silently ignore property setting.
 	}
 
 	/**
@@ -85,7 +85,7 @@ class NullProxy implements ArrayAccess {
 	 * @return void
 	 */
 	public function __unset( string $property ): void {
-		// Do nothing - silently ignore property unsetting
+		// Do nothing - silently ignore property unsetting.
 	}
 
 	/**
@@ -135,7 +135,7 @@ class NullProxy implements ArrayAccess {
 	 * @return void
 	 */
 	public function offsetSet( mixed $offset, mixed $value ): void {
-		// Do nothing - silently ignore array setting
+		// Do nothing - silently ignore array setting.
 	}
 
 	/**
@@ -157,7 +157,7 @@ class NullProxy implements ArrayAccess {
 	 * @return void
 	 */
 	public function offsetUnset( mixed $offset ): void {
-		// Do nothing - silently ignore array unsetting
+		// Do nothing - silently ignore array unsetting.
 	}
 
 	/**

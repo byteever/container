@@ -14,7 +14,7 @@ use RuntimeException;
  * like auto-wiring, service binding, configuration management, and service tagging.
  *
  * @since   1.0.0
- * @version 0.0.1
+ * @version 0.0.2
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  * @package ByteEver/Container
  * @license MIT
