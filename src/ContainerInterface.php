@@ -115,9 +115,9 @@ interface ContainerInterface {
 	 * @param object|null  $instance The instance to register (not needed if $id is array or if auto-instantiating).
 	 *
 	 * @throws RuntimeException If alias conflict is detected.
-	 * @return self
+	 * @return object Returns the registered instance for single registration, or container for array registration.
 	 */
-	public function instance( string|array $id, object $instance = null ): self;
+	public function instance( string|array $id, object $instance = null ): object;
 
 	/**
 	 * Register a binding with the container.
@@ -137,8 +137,7 @@ interface ContainerInterface {
 	 * @param string $id   The abstract type.
 	 * @param array  $parameters The parameters to pass to the constructor.
 	 *
-	 * @throws RuntimeException If circular dependency or resolution fails.
-	 * @return mixed
+	 * @return mixed Returns the resolved instance or NullProxy if resolution fails.
 	 */
 	public function make( string $id, array $parameters = array() ): mixed;
 
