@@ -158,10 +158,22 @@ class Container implements ContainerInterface {
 
 		// Then try to resolve as service.
 		if ( $this->bound( $key ) ) {
-			return $this->make( $key );
+			$result = $this->make( $key );
+			return $result ?? new NullProxy();
 		}
 
-		// Return default if not found.
+		// If not bound but class exists, auto-resolve and return instance.
+		if ( is_string( $key ) && class_exists( $key ) ) {
+			$result = $this->make( $key );
+			return $result ?? new NullProxy();
+		}
+
+		// If fallback is null, return NullProxy for null-safe chaining.
+		if ( null === $fallback ) {
+			return new NullProxy();
+		}
+
+		// Return fallback if not null.
 		return $fallback;
 	}
 
@@ -314,9 +326,9 @@ class Container implements ContainerInterface {
 	 * @param object|null  $instance The instance to register (not needed if $id is array or if auto-instantiating).
 	 *
 	 * @throws RuntimeException If alias conflict is detected or if class cannot be auto-instantiated.
-	 * @return self
+	 * @return object Returns the registered instance for single registration, or container for array registration.
 	 */
-	public function instance( string|array $id, object $instance = null ): self {
+	public function instance( string|array $id, object $instance = null ): object {
 		// If id is an array, loop through and register each instance.
 		if ( is_array( $id ) ) {
 			foreach ( $id as $key => $value ) {
@@ -360,7 +372,7 @@ class Container implements ContainerInterface {
 			'shared'   => true,
 		);
 
-		return $this;
+		return $instance;
 	}
 
 	/**
@@ -409,8 +421,7 @@ class Container implements ContainerInterface {
 	 * @param string $id The abstract type.
 	 * @param array  $parameters The parameters to pass to the constructor.
 	 *
-	 * @throws RuntimeException If circular dependency or resolution fails.
-	 * @return mixed
+	 * @return mixed Returns the resolved instance or NullProxy if resolution fails.
 	 */
 	public function make( string $id, array $parameters = array() ): mixed {
 		$id = $this->get_alias( $id );
@@ -422,31 +433,43 @@ class Container implements ContainerInterface {
 
 		// Check for circular dependencies.
 		if ( isset( $this->resolved[ $id ] ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw new RuntimeException( "Circular dependency detected for: {$id}" );
+			return new NullProxy();
 		}
 
-		// Mark as being resolved.
-		$this->resolved[ $id ] = true;
-
-		$concrete = $this->get_concrete( $id );
-
-		// If we can build the concrete type, do so.
-		if ( $concrete === $id || $concrete instanceof Closure ) {
-			$object = $this->build( $concrete, $parameters );
-		} else {
-			$object = $this->make( $concrete, $parameters );
+		// If the type is not bound and doesn't exist as a class, return NullProxy.
+		if ( ! $this->bound( $id ) && ! class_exists( $id ) ) {
+			return new NullProxy();
 		}
 
-		// If the binding is shared, store the instance.
-		if ( isset( $this->bindings[ $id ]['shared'] ) && $this->bindings[ $id ]['shared'] && empty( $parameters ) ) {
-			$this->instances[ $id ] = $object;
+		try {
+			// Mark as being resolved.
+			$this->resolved[ $id ] = true;
+
+			$concrete = $this->get_concrete( $id );
+
+			// If we can build the concrete type, do so.
+			if ( $concrete === $id || $concrete instanceof Closure ) {
+				$object = $this->build( $concrete, $parameters );
+			} else {
+				$object = $this->make( $concrete, $parameters );
+			}
+
+			// If the binding is shared, store the instance.
+			if ( isset( $this->bindings[ $id ]['shared'] ) && $this->bindings[ $id ]['shared'] && empty( $parameters ) ) {
+				$this->instances[ $id ] = $object;
+			}
+
+			// Always unmark as resolved when done.
+			unset( $this->resolved[ $id ] );
+
+			return $object;
+		} catch ( RuntimeException $e ) {
+			// Always unmark as resolved when done.
+			unset( $this->resolved[ $id ] );
+
+			// Return NullProxy instead of throwing exception.
+			return new NullProxy();
 		}
-
-		// Always unmark as resolved when done.
-		unset( $this->resolved[ $id ] );
-
-		return $object;
 	}
 
 	/**
