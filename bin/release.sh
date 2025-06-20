@@ -34,6 +34,14 @@ if ! composer run phpcs; then
 fi
 echo "✓ Coding standards check passed!"
 
+# Check if tag already exists
+if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+    echo "⚠ Tag v$VERSION already exists. Deleting existing tag..."
+    git tag -d "v$VERSION"
+    git push origin ":refs/tags/v$VERSION"
+    echo "✓ Existing tag v$VERSION deleted."
+fi
+
 # Push the changes to the repository and create release.
 echo "➤ Pushing changes and creating GitHub release..."
 git add .
