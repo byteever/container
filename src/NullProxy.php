@@ -7,10 +7,10 @@ namespace ByteEver\Container;
 use ArrayAccess;
 
 /**
- * NullProxy class for null-safe method chaining.
+ * NullProxy class for null-safe operations.
  *
  * This class acts as a proxy that intercepts method calls and property access
- * on null values, preventing fatal errors and allowing safe method chaining.
+ * on null values, preventing fatal errors and returning null for all operations.
  *
  * @since   1.0.0
  * @version 0.0.2
@@ -20,38 +20,38 @@ use ArrayAccess;
  */
 class NullProxy implements ArrayAccess {
 	/**
-	 * Intercept method calls and return another NullProxy instance.
+	 * Intercept method calls and return null.
 	 *
 	 * @param string $method The method name.
 	 * @param array  $arguments The method arguments.
 	 *
-	 * @return NullProxy
+	 * @return mixed
 	 */
-	public function __call( string $method, array $arguments ): NullProxy {
-		return new static();
+	public function __call( string $method, array $arguments ): mixed {
+		return null;
 	}
 
 	/**
-	 * Intercept static method calls and return another NullProxy instance.
+	 * Intercept static method calls and return null.
 	 *
 	 * @param string $method The method name.
 	 * @param array  $arguments The method arguments.
 	 *
-	 * @return NullProxy
+	 * @return mixed
 	 */
-	public static function __callStatic( string $method, array $arguments ): NullProxy {
-		return new static();
+	public static function __callStatic( string $method, array $arguments ): mixed {
+		return null;
 	}
 
 	/**
-	 * Intercept property access and return another NullProxy instance.
+	 * Intercept property access and return null.
 	 *
 	 * @param string $property The property name.
 	 *
-	 * @return NullProxy
+	 * @return mixed
 	 */
-	public function __get( string $property ): NullProxy {
-		return new static();
+	public function __get( string $property ): mixed {
+		return null;
 	}
 
 	/**
@@ -120,10 +120,10 @@ class NullProxy implements ArrayAccess {
 	 *
 	 * @param mixed $offset The array offset.
 	 *
-	 * @return NullProxy
+	 * @return mixed
 	 */
-	public function offsetGet( mixed $offset ): NullProxy {
-		return new static();
+	public function offsetGet( mixed $offset ): mixed {
+		return null;
 	}
 
 	/**
